@@ -92,7 +92,7 @@ export default function Select({ list, selectType }) {
       try {
         setLoading(true);
         const allPokemonsResponse = await axios.get(
-          "https://pokeapi.co/api/v2/pokemon?limit=10000" // Fetch all Pokémon
+          "https://pokeapi.co/api/v2/pokemon?limit=1000" // Fetch all Pokémon
         );
         const allPokemons = allPokemonsResponse.data.results;
 
@@ -224,11 +224,11 @@ export default function Select({ list, selectType }) {
 
   useEffect(() => {
     if (selectType !== "stat") {
-      if (!open && selectedOptions.length <= list.length) {
+      if ( selectedOptions.length <= list.length) {
         fetchPokemon();
       }
     }
-  }, [open, selectedOptions]);
+  }, [selectedOptions]);
 
   const fetchPokemon = async () => {
     try {
@@ -290,12 +290,19 @@ export default function Select({ list, selectType }) {
   const closeModal = () => {
     setOpen(false);
   };
+
+  const closeModalTab = (event) =>{
+      if (event.key === "Enter") {
+        setOpen(false);
+      }
+  }
   const openDropDown = (event) => {
 
     setOpen((prevValue) => {
       return !prevValue;
     });
   };
+  
   const openDropDownKeyDown = (event) => {
     if (event.key === "Enter") {
     setOpen((prevValue) => {
@@ -330,7 +337,7 @@ export default function Select({ list, selectType }) {
       <div className={`dropdown ${open ? "open-dropdown" : "close-dropdown"}`} ref={dropdownRef}>
         <div className="dropdown-heading">
           <span>Select Stats</span>
-          <FontAwesomeIcon onClick={closeModal} icon={faCircleXmark} />
+          <FontAwesomeIcon tabIndex={0} onClick={closeModal} onKeyDown={(e)=>closeModalTab(e)} icon={faCircleXmark} />
         </div>
         {loading && <Loading />}
         {list.map((option, index) => {

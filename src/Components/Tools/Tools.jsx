@@ -9,6 +9,7 @@ import { searchPokemon } from "../../store/slices/searchedPokemonSlice";
 import { setTypes } from "../../store/slices/pokemonTypesSlice";
 import { setGenders } from "../../store/slices/pokemonGenderSlice";
 import {setFilteredPokemons,setNextSet,setPrevSet} from "../../store/slices/filteredPokemon";
+import {setAllPokemons} from "../../store/slices/allPokemonsSlice";
 import {setPokemons} from "../../store/slices/pokemonSlice";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,6 +20,7 @@ import Accordion from "../../atoms/Accordion/Accordion";
 import Loading from "../../atoms/Loading/Loading";
 
 export default function Tools() {
+  const [searchedPokemon, setSearchedPokemon] = useState([]);
   const dispatch = useDispatch();
   const [typeList, setTypeList] = useState([]);
   const [isMobile, setIsMobile] = useState(false);
@@ -26,9 +28,7 @@ export default function Tools() {
   const [openModal, setOpenModal] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [selectedOptions, setSelectedOptions] = useState({});
-  const { selectedTypes, selectedGenders, selectedStat } = useSelector(
-    (state) => state
-  );
+  const { selectedTypes, selectedGenders, selectedStat,allPokemons } = useSelector((state) => state );
   const [sliderValues, setSliderValues] = useState({});
 
   const [loading, setLoading] = useState(false);
@@ -59,19 +59,38 @@ export default function Tools() {
     },
   });
 
-  const fetchPokemonBasedOnSearch = async () => {
-    if (searchValue) {
+  const fetchPokemonBasedOnClick = async () =>{
+    if(!isNaN(searchValue)){
       try {
         const pokemon = await axios.get(`/pokemon/${searchValue}`);
-        dispatch(searchPokemon(pokemon.data));
+        dispatch(searchPokemon([pokemon.data]));
         toast.success("Pokémon found!");
       } catch (error) {
         console.error("Error fetching Pokémon:", error.message);
         toast.error("Pokémon not found. Please try again!");
       }
-    } else {
-      dispatch(searchPokemon(""));
     }
+  }
+  const fetchPokemonBasedOnSearch = async (pokeList) => {
+
+      try {
+        const pokemonPromises = pokeList.map(async (item) => {
+          if (item.name) {
+            const response = await axios.get(`/pokemon/${item.name}`);
+            return response.data; // Extract actual Pokémon data
+          }
+          return null;
+        });
+    
+        const pokemonResults = await Promise.all(pokemonPromises); // Wait for all API calls
+        const filteredResults = pokemonResults.filter(Boolean); // Remove nulls if any
+    
+        console.log("Fetched Pokemons:", filteredResults);
+        setSearchedPokemon(filteredResults); // Assuming `setSearchedPokemon` is your state setter
+      } catch (error) {
+        console.error("Error fetching Pokémon:", error.message);
+      }   
+    
   };
 
   const openfilterModal = () => {
@@ -79,7 +98,7 @@ export default function Tools() {
   };
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
-      fetchPokemonBasedOnSearch();
+      fetchPokemonBasedOnClick();
     }
   };
 
@@ -114,6 +133,7 @@ export default function Tools() {
     }
     fetchAlltypes();
   }, []);
+
   useEffect(() => {
     async function fetchAllGenders() {
       const res = await axios("/gender");
@@ -124,6 +144,42 @@ export default function Tools() {
     }
     fetchAllGenders();
   }, []);
+
+  useEffect(()=>{
+    async function fetchAllPokemons() {
+      const allPokemonsResponse = await axios.get(
+        "https://pokeapi.co/api/v2/pokemon?limit=10000" // Fetch all Pokémon
+      );
+      if (allPokemonsResponse) {
+        dispatch(setAllPokemons(allPokemonsResponse.data.results));
+      }
+    }
+    fetchAllPokemons();
+  },[]);
+
+  useEffect(()=>{
+    function filterPokemon(pokemonArr, searchString) {
+      if (!searchString) {
+        return pokemonArr; // Return the original array if the search string is empty
+      }
+    
+      const lowerCaseSearch = searchString.toLowerCase();
+    
+      return pokemonArr.filter((pokemon) =>
+        pokemon.name.toLowerCase().startsWith(lowerCaseSearch)
+      );
+    }
+    if(isNaN(searchValue)){
+      let pokeList = filterPokemon(allPokemons.allPokemons,searchValue);
+      console.log("pokemonList",pokeList)
+    
+        fetchPokemonBasedOnSearch(pokeList);
+      
+      console.log("searchPokemon",searchedPokemon)
+      dispatch(searchPokemon(pokeList));
+    }
+   
+  },[searchValue])
 
   const fetchPokemon = async (typeName) => {
     try {
@@ -339,7 +395,7 @@ setLoading(false)
               setSearchValue(e.target.value);
             }}
           />
-          <button onClick={fetchPokemonBasedOnSearch}>
+          <button onClick={fetchPokemonBasedOnClick}>
             <FontAwesomeIcon icon={faSearch} className="search-icon" />
           </button>
         </div>

@@ -196,9 +196,9 @@ export default function Accordion({ list, selectType }) {
 
   return (
     <div className="accordion-container">
-      <div className={`accordion-head-container ${selectType}`}>
-        <div className="accordion-head">
-          <div className="accordion-head-title">{selectType}</div>
+      <section className={`accordion-head-container ${selectType}`}>
+        <header className="accordion-head">
+          <h2 className="accordion-head-title">{selectType}</h2>
           <div className="accordion-head-types"  dangerouslySetInnerHTML={{ __html: selectOptionShow }}></div>
 
           <div className="accordion-head-icon">
@@ -206,11 +206,11 @@ export default function Accordion({ list, selectType }) {
               {!openAccordion ? <FontAwesomeIcon icon={faCirclePlus} /> :<FontAwesomeIcon icon={faCircleMinus} /> }
             </button>
           </div>
-        </div>
-       {openAccordion && <div className="accordion-head-list"> {list.map((option, index) => {
+        </header>
+       {openAccordion && <ul className="accordion-head-list"> {list.map((option, index) => {
           if (selectType == "stat") {
             return (
-              <div key={index} className="dropdown-option">
+              <li key={index} className="dropdown-option">
                 
                 <label>
                   {option.name.includes("-")
@@ -224,7 +224,7 @@ export default function Accordion({ list, selectType }) {
                     handleRangeChange(option.name, values)
                   }
                 />
-              </div>
+              </li>
             );
           } else {
             return (
@@ -241,8 +241,8 @@ export default function Accordion({ list, selectType }) {
               </div>
             );
           }
-        })}</div>}
-      </div>
+        })}</ul>}
+      </section>
       
     </div>
   );

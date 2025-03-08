@@ -65,8 +65,9 @@ export default function PokeCard({ pokemon }) {
       setPokeImage(pokemon.sprites.other.dream_world.front_default);
       setPokeId(pokemon.id.toString().padStart(3, "0"));
     }
+      pokemon.sprites ? setData() : fetchPokemonDetails();
 
-    pokemon.sprites ? setData() : fetchPokemonDetails();
+    
   }, [pokemon]);
 
   const backgroundStyle =

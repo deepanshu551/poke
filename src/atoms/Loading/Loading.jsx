@@ -4,6 +4,8 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 export default function Loading() {
   return (
-    <div> <FontAwesomeIcon icon={faSpinner} spin size="2x" style={{ color: '007bff' }} /></div>
-  )
+<div role="alert" aria-live="polite" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+      <FontAwesomeIcon icon={faSpinner} spin size="2x" style={{ color: '#007bff' }} />
+      <span className="sr-only">Loading...</span>
+    </div>  )
 }

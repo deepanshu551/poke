@@ -10,6 +10,7 @@ import pokemonStatSlice from "./slices/pokemonStat";
 import selectedTypesSlice from "./slices/selectedTypesSlice";
 import selectedGendersSlice from "./slices/selectedGendersSlice";
 import selectedStatSlice from "./slices/selectedStatSlice";
+import allPokemonsSlice from "./slices/allPokemonsSlice"
 
 const store = configureStore({
     reducer:{
@@ -23,7 +24,8 @@ const store = configureStore({
         pokemons:pokemonStatSlice,
         selectedTypes:selectedTypesSlice,
         selectedGenders:selectedGendersSlice,
-        selectedStat:selectedStatSlice
+        selectedStat:selectedStatSlice,
+        allPokemons: allPokemonsSlice
     }
 });
 

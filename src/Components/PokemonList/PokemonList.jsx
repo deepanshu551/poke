@@ -20,9 +20,15 @@ export default function PokemonList() {
       dispatch(setPokemons(pokemons.data));
     }
 
-    searchedPokemon.pokemon
-      ? setPokeList([searchedPokemon.pokemon])
-      : fetchPokemons();
+    // searchedPokemon.pokemon
+    //   ? setPokeList([searchedPokemon.pokemon])
+    //   : fetchPokemons();
+    if(searchedPokemon?.pokemon?.length>=1){
+      setPokeList(searchedPokemon.pokemon)
+    }
+    else{
+      fetchPokemons();
+    }
   }, [searchedPokemon]);
 
   useEffect(() => {
@@ -55,7 +61,7 @@ export default function PokemonList() {
   return (
     <ErrorBoundary>
       <div className="poke-list">
-        {pokeList.map((pokemon) => {
+        {pokeList?.map((pokemon) => {
           return <PokeCard key={pokemon.name} pokemon={pokemon} />;
         })}
       </div>

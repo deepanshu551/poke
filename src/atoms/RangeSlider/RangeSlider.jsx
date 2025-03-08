@@ -92,8 +92,9 @@ const RangeSlider = ({ sliderId, defaultValues, onRangeChange, open }) => {
       <div className="container">
         <div className={`slider-track slider-track-${sliderId}`}></div>
         <div>
-          <div className={`tooltip`} id={`slider-tooltip-1-${sliderId}`}></div>
+          <div className={`tooltip`} id={`slider-tooltip-1-${sliderId}`} tabIndex={0}></div>
           <input
+          tabIndex={-1}
           data-testid={`slider-1-${sliderId}`}
             type="range"
             min="0"
@@ -105,8 +106,9 @@ const RangeSlider = ({ sliderId, defaultValues, onRangeChange, open }) => {
         </div>
 
         <div>
-          <div className={`tooltip`} id={`slider-tooltip-2-${sliderId}`}></div>
+          <div className={`tooltip`} id={`slider-tooltip-2-${sliderId}`} tabIndex={0}></div>
           <input
+          tabIndex={-1}
             type="range"
             min="0"
             max="210"

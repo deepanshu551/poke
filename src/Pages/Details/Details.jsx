@@ -311,16 +311,16 @@ export default function Details() {
           />
         </div>
         <div className="poke-details-title">
-          <div data-testid="details-pokeName" className="poke-details-name heading_super_bold">
+          <h2 data-testid="details-pokeName" className="poke-details-name heading_super_bold">
             {selectedPokemon.pokemon && selectedPokemon.pokemon.name}
-          </div>
+          </h2>
           <div className="poke-details-divider"></div>
           <div className="poke-details-id">
             {selectedPokemon.pokemon &&
               selectedPokemon.pokemon.id.toString().padStart(3, "0")}
           </div>
           <div className="poke-details-divider"></div>
-          <div className="poke-navigation">
+          <nav aria-label="Pokemon Navigation" className="poke-navigation">
             <FontAwesomeIcon
               className="poke-icon left"
               onClick={onPrev}
@@ -343,7 +343,7 @@ export default function Details() {
               tabIndex="0"
               icon={faCircleArrowRight}
             />
-          </div>
+          </nav>
         </div>
         <div className={`poke-details-description`} ref={descriptionRef}>
           {description + ". . ."}
@@ -459,10 +459,10 @@ export default function Details() {
           tabIndex="0"
         />
       </div>
-      <div className={`poke-navigation-mobile ${isMobile ? "show" : ""}`}>
+      <nav aria-label="Mobile Pokemon Navigation" className={`poke-navigation-mobile ${isMobile ? "show" : ""}`}>
         {prevPokemon && <button onClick={onPreviousClick} className="poke-navigation-mobile-button"><FontAwesomeIcon icon={faArrowLeft}/> <span>{prevPokemon.name}</span> </button>}
         {nextPokemon && <button onClick={onNextClick} className="poke-navigation-mobile-button"> <span>{nextPokemon.name}</span> <FontAwesomeIcon icon={faArrowRight}/></button>}
-      </div>
+      </nav>
     </section>
   );
 }
